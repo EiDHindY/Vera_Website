@@ -1,0 +1,330 @@
+/* ============================================================
+   VERA PET CARE — THEME SYSTEM
+   Single source of truth for Egypt + UAE storefronts
+   Board-approved June 2026 | Version 1.0
+   ============================================================
+   DARK THEME ONLY — No light mode. No prefers-color-scheme toggle.
+   Admin panel (Sprint 5) uses a separate admin.css — not this file.
+   ============================================================ */
+
+:root {
+
+  /* ──────────────────────────────────────────────────────────
+     PRIMARY GOLD RAMP
+     Extracted from logo (median #DEC159). Pantone 871 C metallic.
+     ────────────────────────────────────────────────────────── */
+  --vera-gold-50:  #F8EECE;   /* highlight bg, ingredient sections, light surface blocks  */
+  --vera-gold-100: #F5DC77;   /* hover/active accent, active link state                   */
+  --vera-gold-400: #DEC159;   /* logo primary reference — do not use for interactive UI    */
+  --vera-gold-600: #C5A53E;   /* CTA buttons, links, interactive gold — WCAG AA on #1A1A1A */
+  --vera-gold-800: #9B8120;   /* dark accent details, pressed states                      */
+  --vera-gold-900: #6B5A15;   /* text on Gold-50 backgrounds                              */
+
+  /* ──────────────────────────────────────────────────────────
+     BACKGROUND BLACKS — Elevation Ramp
+     5-step depth system. Cards (#242424) sit on page (#1A1A1A).
+     Modals/dropdowns (#2E2E2E) float above cards.
+     ────────────────────────────────────────────────────────── */
+  --vera-bg-deep:      #0D0D0D;  /* hero sections, nav bar, footer                       */
+  --vera-bg-primary:   #1A1A1A;  /* main page background — theme-color meta tag value     */
+  --vera-bg-card:      #242424;  /* product cards, content panels, form containers        */
+  --vera-bg-elevated:  #2E2E2E;  /* modals, dropdowns, popovers, tooltips                 */
+  --vera-border:       #3A3A3A;  /* dividers, card borders, input borders (resting)       */
+  --vera-border-hover: #4A4A4A;  /* input borders on hover/focus                          */
+
+  /* ──────────────────────────────────────────────────────────
+     TEXT NEUTRALS
+     Warm whites for body text. Pure white reserved for headings
+     and prices only — reduces eye strain on dark backgrounds.
+     ────────────────────────────────────────────────────────── */
+  --vera-text-primary:  #FFFFFF;  /* headings, product names, prices — max contrast       */
+  --vera-text-body:     #E8E6E1;  /* body paragraphs, descriptions, long-form content     */
+  --vera-text-muted:    #A09E99;  /* captions, secondary info, timestamps, meta           */
+  --vera-text-subtle:   #6B6966;  /* placeholders, disabled text, ghost elements          */
+
+  /* ──────────────────────────────────────────────────────────
+     SEMANTIC STATES — E-Commerce
+     Foreground + background tint pairs for status badges.
+     Usage: color: var(--vera-success); background: var(--vera-success-bg);
+     ────────────────────────────────────────────────────────── */
+  --vera-success:       #34D399;  /* payment confirmed, delivered, in stock               */
+  --vera-success-bg:    #0D3B20;
+
+  --vera-warning:       #F59E0B;  /* low stock, Fawry countdown, pending COD              */
+  --vera-warning-bg:    #3B1D0D;
+
+  --vera-error:         #EF4444;  /* payment failed, validation error, out of stock       */
+  --vera-error-bg:      #3B0D0D;
+
+  --vera-info:          #60A5FA;  /* tracking updates, shipping status, informational     */
+  --vera-info-bg:       #0D2640;
+
+  /* ──────────────────────────────────────────────────────────
+     WHATSAPP CTA — Egypt Primary Sales Channel
+     Recognizable WhatsApp green, desaturated to harmonize with
+     gold palette. NOT raw WhatsApp brand green (#25D366).
+     UAE storefront: do not use — WhatsApp is not primary channel.
+     ────────────────────────────────────────────────────────── */
+  --vera-whatsapp:      #28A85A;
+  --vera-whatsapp-bg:   #0D3B20;
+  --vera-whatsapp-hover:#2EBD6B;
+
+  /* ──────────────────────────────────────────────────────────
+     UAE / GCC STOREFRONT TOKENS
+     Used only in /en/ (UAE) context. Never apply --vera-whatsapp
+     in UAE pages — WA is not the primary UAE sales channel.
+     ────────────────────────────────────────────────────────── */
+  --vera-tabby-brand:    #3BFFC1;   /* Tabby BNPL — original brand color                  */
+  --vera-tamara-brand:   #F2C94C;   /* Tamara BNPL — original brand color                 */
+  --vera-network-intl:   #1A1A6C;   /* Network International                               */
+
+  /* ──────────────────────────────────────────────────────────
+     TYPOGRAPHY
+     ────────────────────────────────────────────────────────── */
+  --vera-font-en:       'Inter', -apple-system, 'Segoe UI', Arial, sans-serif;
+  --vera-font-ar:       'Cairo', 'Tajawal', -apple-system, sans-serif;
+  --vera-font-mono:     'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --vera-text-xs:       0.75rem;   /* 12px — fine print, legal                            */
+  --vera-text-sm:       0.875rem;  /* 14px — captions, badges, min Arabic body             */
+  --vera-text-base:     1rem;      /* 16px — body text default                             */
+  --vera-text-lg:       1.125rem;  /* 18px — emphasized body                               */
+  --vera-text-xl:       1.25rem;   /* 20px — subheadings, product price (small)            */
+  --vera-text-2xl:      1.5rem;    /* 24px — section headings                              */
+  --vera-text-3xl:      2rem;      /* 32px — page titles, hero price                       */
+  --vera-text-4xl:      2.5rem;    /* 40px — hero headline                                 */
+
+  --vera-leading-tight:  1.25;
+  --vera-leading-normal: 1.5;
+  --vera-leading-relaxed:1.75;     /* Arabic body text — extra line height for readability  */
+
+  --vera-weight-regular: 400;
+  --vera-weight-medium:  500;
+  --vera-weight-semi:    600;
+  --vera-weight-bold:    700;
+
+  /* ──────────────────────────────────────────────────────────
+     SPACING
+     ────────────────────────────────────────────────────────── */
+  --vera-space-xs:   0.25rem;  /* 4px   */
+  --vera-space-sm:   0.5rem;   /* 8px   */
+  --vera-space-md:   1rem;     /* 16px  */
+  --vera-space-lg:   1.5rem;   /* 24px  */
+  --vera-space-xl:   2rem;     /* 32px  */
+  --vera-space-2xl:  3rem;     /* 48px  */
+  --vera-space-3xl:  4rem;     /* 64px  */
+
+  /* ──────────────────────────────────────────────────────────
+     BORDERS & RADII
+     ────────────────────────────────────────────────────────── */
+  --vera-radius-sm:   4px;
+  --vera-radius-md:   8px;     /* buttons, inputs, badges                                 */
+  --vera-radius-lg:   12px;    /* cards, panels                                            */
+  --vera-radius-xl:   16px;    /* modals, large containers                                 */
+  --vera-radius-full: 9999px;  /* pills, status badges, avatars                            */
+
+  --vera-border-width: 1px;
+  --vera-border-thin:  0.5px;
+
+  /* ──────────────────────────────────────────────────────────
+     SHADOWS — Minimal, dark-mode-appropriate
+     No box-shadows on cards (use border instead). Shadows only
+     for elevated elements (modals, dropdowns).
+     ────────────────────────────────────────────────────────── */
+  --vera-shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --vera-shadow-dropdown: 0 2px 12px rgba(0, 0, 0, 0.4);
+
+  /* ──────────────────────────────────────────────────────────
+     TRANSITIONS
+     ────────────────────────────────────────────────────────── */
+  --vera-transition-fast:   150ms ease;
+  --vera-transition-normal: 250ms ease;
+  --vera-transition-slow:   400ms ease;
+
+  /* ──────────────────────────────────────────────────────────
+     Z-INDEX SCALE
+     ────────────────────────────────────────────────────────── */
+  --vera-z-base:     1;
+  --vera-z-sticky:   100;   /* sticky nav                                                */
+  --vera-z-dropdown: 200;   /* dropdowns, popovers                                       */
+  --vera-z-modal:    300;   /* modals, overlays                                           */
+  --vera-z-toast:    400;   /* toast notifications                                        */
+
+  /* ──────────────────────────────────────────────────────────
+     LAYOUT
+     ────────────────────────────────────────────────────────── */
+  --vera-max-width:      1200px;
+  --vera-content-width:  960px;
+  --vera-sidebar-width:  280px;
+  --vera-nav-height:     64px;
+  --vera-nav-height-mobile: 56px;
+}
+
+
+/* ============================================================
+   BASE RESETS
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--vera-font-en);
+  font-size: var(--vera-text-base);
+  font-weight: var(--vera-weight-regular);
+  line-height: var(--vera-leading-normal);
+  color: var(--vera-text-body);
+  background-color: var(--vera-bg-primary);
+}
+
+
+/* ============================================================
+   RTL / ARABIC SUPPORT
+   ============================================================ */
+
+[dir="rtl"],
+[lang="ar"] {
+  font-family: var(--vera-font-ar);
+  line-height: var(--vera-leading-relaxed);
+}
+
+[dir="rtl"] body,
+[lang="ar"] body {
+  font-family: var(--vera-font-ar);
+  text-align: right;
+}
+
+/* Arabic body text minimum size — never below 14px */
+[lang="ar"] p,
+[lang="ar"] li,
+[lang="ar"] td,
+[lang="ar"] span,
+[dir="rtl"] p,
+[dir="rtl"] li,
+[dir="rtl"] td {
+  font-size: max(var(--vera-text-sm), 14px);
+}
+
+
+/* ============================================================
+   COMPONENT TOKENS
+   Semantic aliases for specific UI components.
+   Use these in component CSS instead of raw variables.
+   ============================================================ */
+
+:root {
+  /* Navigation */
+  --vera-nav-bg:          var(--vera-bg-deep);
+  --vera-nav-text:        var(--vera-text-body);
+  --vera-nav-text-active: var(--vera-gold-100);
+  --vera-nav-border:      var(--vera-border);
+
+  /* Cards */
+  --vera-card-bg:         var(--vera-bg-card);
+  --vera-card-border:     var(--vera-border);
+  --vera-card-radius:     var(--vera-radius-lg);
+
+  /* Buttons — Primary (Gold) */
+  --vera-btn-primary-bg:       var(--vera-gold-600);
+  --vera-btn-primary-text:     var(--vera-bg-deep);
+  --vera-btn-primary-hover:    var(--vera-gold-100);
+  --vera-btn-primary-active:   var(--vera-gold-800);
+
+  /* Buttons — Secondary (Outline) */
+  --vera-btn-secondary-bg:     transparent;
+  --vera-btn-secondary-text:   var(--vera-gold-400);
+  --vera-btn-secondary-border: var(--vera-border);
+  --vera-btn-secondary-hover:  var(--vera-bg-elevated);
+
+  /* Buttons — WhatsApp (Egypt only) */
+  --vera-btn-whatsapp-bg:      var(--vera-whatsapp);
+  --vera-btn-whatsapp-text:    var(--vera-text-primary);
+  --vera-btn-whatsapp-hover:   var(--vera-whatsapp-hover);
+
+  /* Inputs */
+  --vera-input-bg:          var(--vera-text-primary);  /* white — functional exception */
+  --vera-input-text:        var(--vera-bg-deep);       /* dark text on white input     */
+  --vera-input-border:      var(--vera-border);
+  --vera-input-border-focus:var(--vera-gold-600);
+  --vera-input-placeholder: var(--vera-text-subtle);
+
+  /* Badges / Status Pills */
+  --vera-badge-radius:      var(--vera-radius-full);
+  --vera-badge-padding:     var(--vera-space-xs) var(--vera-space-md);
+  --vera-badge-font-size:   var(--vera-text-xs);
+
+  /* Product Page — Ingredient Section (light surface) */
+  --vera-surface-light-bg:   var(--vera-gold-50);
+  --vera-surface-light-text: var(--vera-gold-900);
+  --vera-surface-light-heading: var(--vera-gold-800);
+
+  /* Footer */
+  --vera-footer-bg:        var(--vera-bg-deep);
+  --vera-footer-text:      var(--vera-text-muted);
+  --vera-footer-link:      var(--vera-gold-600);
+  --vera-footer-link-hover:var(--vera-gold-100);
+
+  /* Modal / Overlay */
+  --vera-overlay-bg:       rgba(0, 0, 0, 0.7);
+  --vera-modal-bg:         var(--vera-bg-elevated);
+  --vera-modal-border:     var(--vera-border);
+  --vera-modal-radius:     var(--vera-radius-xl);
+
+  /* Checkout — Fawry Reference Card (white exception) */
+  --vera-fawry-card-bg:    var(--vera-text-primary);   /* #FFFFFF */
+  --vera-fawry-card-text:  var(--vera-bg-deep);        /* #0D0D0D */
+  --vera-fawry-card-font:  var(--vera-font-mono);
+}
+
+
+/* ============================================================
+   UTILITY CLASSES
+   Minimal set for common patterns. Not a full utility framework.
+   ============================================================ */
+
+/* Text colors */
+.text-primary  { color: var(--vera-text-primary); }
+.text-body     { color: var(--vera-text-body); }
+.text-muted    { color: var(--vera-text-muted); }
+.text-subtle   { color: var(--vera-text-subtle); }
+.text-gold     { color: var(--vera-gold-400); }
+.text-gold-cta { color: var(--vera-gold-600); }
+
+/* Background colors */
+.bg-deep       { background-color: var(--vera-bg-deep); }
+.bg-primary    { background-color: var(--vera-bg-primary); }
+.bg-card       { background-color: var(--vera-bg-card); }
+.bg-elevated   { background-color: var(--vera-bg-elevated); }
+.bg-gold-light { background-color: var(--vera-gold-50); color: var(--vera-gold-900); }
+
+/* Status badges */
+.badge-success { color: var(--vera-success); background: var(--vera-success-bg); }
+.badge-warning { color: var(--vera-warning); background: var(--vera-warning-bg); }
+.badge-error   { color: var(--vera-error);   background: var(--vera-error-bg); }
+.badge-info    { color: var(--vera-info);     background: var(--vera-info-bg); }
+
+/* Direction */
+.rtl { direction: rtl; text-align: right; }
+.ltr { direction: ltr; text-align: left; }
+
+
+/* ============================================================
+   META / PLATFORM TAGS
+   Include these in <head> for consistent browser/OS rendering.
+   ============================================================
+   <meta name="theme-color" content="#1A1A1A">
+   <meta name="color-scheme" content="dark">
+   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+   ============================================================ */

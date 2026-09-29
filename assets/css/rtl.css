@@ -1,0 +1,301 @@
+/* =====================================================
+   VERA PET CARE — RTL STYLESHEET
+   Arabic-specific overrides using CSS logical properties
+   Import AFTER main.css on all /ar/ pages
+   ===================================================== */
+
+/* Force RTL document direction */
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+/* Arabic body typography */
+html[dir="rtl"] body {
+  font-family: var(--font-arabic);
+  line-height: 1.85;
+}
+
+/* Arabic headings */
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4,
+html[dir="rtl"] h5 {
+  font-family: var(--font-arabic);
+  font-weight: 700;
+}
+
+/* EN-label alignment fix in RTL */
+html[dir="rtl"] .en-label {
+  letter-spacing: 0.2em;
+}
+
+/* =====================================================
+   NAV RTL ADJUSTMENTS
+   ===================================================== */
+html[dir="rtl"] .nav-links {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .site-nav {
+  flex-direction: row-reverse;
+}
+
+/* =====================================================
+   HERO RTL
+   ===================================================== */
+html[dir="rtl"] .hero {
+  text-align: center;
+}
+
+/* =====================================================
+   WHY VERA — RTL IMAGE/TEXT SWAP
+   ===================================================== */
+html[dir="rtl"] .why-vera-grid {
+  direction: rtl;
+}
+
+html[dir="rtl"] .why-vera-content {
+  text-align: right;
+}
+
+html[dir="rtl"] .verified-badge {
+  flex-direction: row-reverse;
+}
+
+/* =====================================================
+   PRODUCT HERO RTL
+   ===================================================== */
+html[dir="rtl"] .product-hero-grid {
+  direction: rtl;
+}
+
+/* Wider product image in RTL — image was too tall/narrow */
+html[dir="rtl"] .product-img-wrap img {
+  max-width: 520px;
+  width: 100%;
+}
+
+html[dir="rtl"] .product-info {
+  text-align: right;
+}
+
+html[dir="rtl"] .safety-badges {
+  justify-content: flex-start;
+}
+
+/* Match English view: full cover fill, same as LTR */
+html[dir="rtl"] .product-card-img-inner img:not(.product-card-bg):not(.product-card-overlay) {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  max-width: none;
+  padding: 0;
+}
+
+html[dir="rtl"] .payment-badges {
+  justify-content: flex-start;
+}
+
+@media (max-width: 900px) {
+
+  html[dir="rtl"] .safety-badges,
+  html[dir="rtl"] .payment-badges {
+    justify-content: center;
+  }
+
+  html[dir="rtl"] .product-info {
+    text-align: center;
+  }
+}
+
+/* =====================================================
+   ACCORDION RTL
+   ===================================================== */
+html[dir="rtl"] .accordion-section {
+  direction: rtl;
+}
+
+html[dir="rtl"] .accordion-trigger {
+  text-align: right;
+  flex-direction: row;
+}
+
+html[dir="rtl"] .accordion-tag {
+  margin-inline-start: 0;
+  margin-inline-end: 12px;
+}
+
+html[dir="rtl"] .accordion-body {
+  text-align: right;
+  direction: rtl;
+  font-family: var(--font-arabic);
+}
+
+/* =====================================================
+   FAQ RTL
+   ===================================================== */
+html[dir="rtl"] .faq-question {
+  text-align: right;
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .faq-answer {
+  text-align: right;
+}
+
+/* =====================================================
+   REVIEW CARDS RTL
+   ===================================================== */
+html[dir="rtl"] .review-card {
+  text-align: right;
+}
+
+/* =====================================================
+   CROSSSELL RTL
+   ===================================================== */
+html[dir="rtl"] .crosssell-card {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* =====================================================
+   BUNDLE RTL
+   ===================================================== */
+html[dir="rtl"] .bundle-line {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .bundle-total-line {
+  flex-direction: row-reverse;
+}
+
+/* =====================================================
+   SAFETY LIST RTL
+   ===================================================== */
+html[dir="rtl"] .safety-item {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* =====================================================
+   PROTOCOL PHASES RTL
+   ===================================================== */
+html[dir="rtl"] .protocol-phase {
+  direction: rtl;
+}
+
+/* =====================================================
+   FLOATING WA BUTTON — RTL POSITION
+   ===================================================== */
+html[dir="rtl"] .float-wa {
+  right: 24px;
+  left: auto;
+}
+
+/* =====================================================
+   USAGE CARDS RTL
+   ===================================================== */
+html[dir="rtl"] .usage-card {
+  direction: rtl;
+}
+
+/* =====================================================
+   ARTICLE BODY RTL
+   ===================================================== */
+html[dir="rtl"] .article-body {
+  text-align: right;
+  direction: rtl;
+  font-family: var(--font-arabic);
+}
+
+html[dir="rtl"] .article-body h2 {
+  text-align: right;
+}
+
+html[dir="rtl"] .article-body ul {
+  padding-inline-start: 0;
+  padding-inline-end: 18px;
+}
+
+/* =====================================================
+   FOOTER RTL
+   ===================================================== */
+html[dir="rtl"] .footer-nav {
+  direction: rtl;
+}
+
+html[dir="rtl"] .footer-market-row {
+  flex-direction: row-reverse;
+}
+
+/* =====================================================
+   ARABIC NUMBER FORMATTING
+   Numbers on AR pages use Arabic-Indic numeral display
+   JS handles toLocaleString('ar-EG') for actual number formatting
+   ===================================================== */
+html[dir="rtl"] .price-display,
+html[dir="rtl"] .product-price,
+html[dir="rtl"] .bundle-final-price,
+html[dir="rtl"] .bundle-price-big {
+  font-family: var(--font-arabic);
+  direction: rtl;
+}
+
+/* =====================================================
+   NAV OVERLAY RTL
+   ===================================================== */
+html[dir="rtl"] .nav-overlay {
+  direction: rtl;
+}
+
+html[dir="rtl"] .nav-close {
+  inset-inline-end: 6%;
+  inset-inline-start: auto;
+}
+
+/* =====================================================
+   SPECIES / FELINE SECTION RTL
+   ===================================================== */
+html[dir="rtl"] .species-section p {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] .species-section h2 {
+  text-align: center;
+}
+
+/* =====================================================
+   DUAL HARMONY / PRODUCT INFO RTL
+   ===================================================== */
+html[dir="rtl"] .dual-info-grid {
+  direction: rtl;
+  text-align: right;
+}
+
+/* =====================================================
+   PRODUCT GRID RTL — 3 COLUMNS (matches English view)
+   ===================================================== */
+html[dir="rtl"] .products-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* =====================================================
+   PRODUCT CARD BODY RTL
+   ===================================================== */
+html[dir="rtl"] .product-card-body {
+  direction: rtl;
+}
+
+/* =====================================================
+   ACCORDION HEADER RTL
+   ===================================================== */
+html[dir="rtl"] .accordion-header {
+  direction: rtl;
+}
+
+html[dir="rtl"] .accordion-header h2 {
+  text-align: center;
+}

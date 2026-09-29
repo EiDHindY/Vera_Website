@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الصفحة غير موجودة | VERA Pet Care</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="assets/logo_gold.png">
+  <link rel="apple-touch-icon" href="assets/logo_gold.png">
+  <meta name="theme-color" content="#1A1A1A">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Tajawal:wght@300;400;600;700&family=Inter:wght@200;300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/theme.css?v=2">
+  <link rel="stylesheet" href="assets/css/main.css?v=4">
+
+  <style>
+    .error-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      background: var(--color-black-deep);
+    }
+    .error-inner { max-width: 560px; }
+    .error-code {
+      font-family: 'Inter', sans-serif;
+      font-size: 8rem;
+      font-weight: 200;
+      color: var(--color-border);
+      line-height: 1;
+      margin-block-end: 0;
+    }
+    .error-headline {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      margin-block: 16px 10px;
+    }
+    .error-sub {
+      color: var(--color-text-muted);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-block-end: 40px;
+    }
+    .error-links {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .error-divider {
+      margin-block: 36px;
+      border: none;
+      border-block-start: 1px solid var(--color-border-subtle);
+    }
+    .error-lang-note {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+    <script>window.VERA_ROOT = "";</script>
+</head>
+<body>
+  <div class="error-page">
+    <div class="error-inner">
+      <img src="assets/logo_gold.png" alt="VERA" width="80" height="80"
+           style="opacity:0.35; margin-block-end:32px; display:block; margin-inline:auto;">
+
+      <p class="error-code">404</p>
+
+      <h1 class="error-headline" id="err-headline">الصفحة غير موجودة</h1>
+      <p class="error-sub" id="err-sub">
+        الرابط الذي طلبته غير متاح أو تم تغييره.<br>
+        يمكنك العودة إلى الصفحة الرئيسية أو استكشاف المنتجات.
+      </p>
+
+      <div class="error-links">
+        <a href="ar/index.html" class="btn btn-gold" id="link-home">الرئيسية</a>
+        <a href="ar/bundle/index.html" class="btn" id="link-bundle"
+           style="background:transparent; border:1px solid var(--color-border-subtle); color:var(--color-silver);">الباقة الكاملة</a>
+      </div>
+
+      <hr class="error-divider">
+
+      <p class="error-lang-note" id="err-lang-note">
+        Looking for the English site? <a href="en/index.html" style="color:var(--color-gold);">Go to English →</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Detect stored language preference and adapt the 404 page
+    (function() {
+      var lang = localStorage.getItem('vera_lang') || 'ar';
+      var root = document.getElementById('html-root');
+      if (lang === 'en') {
+        root.setAttribute('lang', 'en');
+        root.setAttribute('dir', 'ltr');
+        document.title = 'Page Not Found | VERA Pet Care';
+        document.getElementById('err-headline').textContent = 'Page Not Found';
+        document.getElementById('err-sub').innerHTML =
+          "The link you requested doesn't exist or has moved.<br>Return to the homepage or explore our products.";
+        document.getElementById('link-home').href = '/en/';
+        document.getElementById('link-home').textContent = 'Home';
+        document.getElementById('link-bundle').href = '/en/bundle/';
+        document.getElementById('link-bundle').textContent = 'Full Bundle';
+        document.getElementById('err-lang-note').innerHTML =
+          'هل تبحث عن الموقع العربي؟ <a href="ar/index.html" style="color:var(--color-gold);">← اذهب إلى العربية</a>';
+      }
+    })();
+  </script>
+</body>
+</html>

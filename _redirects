@@ -1,0 +1,12 @@
+# VERA Pet Care — Netlify Redirects
+# Old flat-site URLs → new structured URLs
+/product.html         /ar/products/spray/     301
+/shampoo.html         /ar/products/shampoo/   301
+/deodorizing.html     /ar/products/deo/       301
+/articles.html        /ar/articles/           301
+/article_01.html      /ar/articles/01/        301
+/article_02.html      /ar/articles/02/        301
+
+# Trailing-slash normalization (belt-and-suspenders)
+/ar                   /ar/                    301
+/en                   /en/                    301
