@@ -6,6 +6,15 @@
 
 'use strict';
 
+// ---------------------------------------------------------
+// DEV UTILS: Block Analytics (Meta Pixel & GA4) on localhost
+// ---------------------------------------------------------
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') {
+  console.log('🚧 Dev Mode: Analytics tracking is disabled on localhost.');
+  window.fbq = function () { console.log('Blocked fbq:', arguments); };
+  window.gtag = function () { console.log('Blocked gtag:', arguments); };
+}
+
 /* =====================================================
    BRAND CONFIGURATION
    All prices are HARDCODED — never convert currencies
@@ -191,6 +200,7 @@ function setLang(lang) {
    FACEBOOK CONVERSIONS API (SERVER-SIDE)
    ===================================================== */
 async function sendCapiEvent(eventName, userData = null, customData = null) {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') return;
   try {
     const url = window.location.href;
     const body = {
@@ -538,12 +548,14 @@ function generateEventID() {
 }
 
 function trackEvent(eventName, params = {}) {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') return;
   if (typeof gtag === 'function') {
     gtag('event', eventName, params);
   }
 }
 
 function trackWAClick(productName, market) {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') return;
   const eventId = generateEventID();
   trackEvent('whatsapp_click', { product: productName, market: market });
 
@@ -554,6 +566,7 @@ function trackWAClick(productName, market) {
 }
 
 function trackPageView(pageName) {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') return;
   const eventId = generateEventID();
   if (typeof fbq === 'function') {
     fbq('track', 'ViewContent', { content_name: pageName }, { eventID: eventId });
@@ -672,6 +685,69 @@ function splashAutoRedirect() {
    INIT
    ===================================================== */
 document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // 1. Enable Admin Mode if requested
+  if (urlParams.get('admin') === 'true' || urlParams.get('admin') === '1') {
+    localStorage.setItem('vera_admin_mode', '1');
+    
+    // Non-blocking, beautiful UI toast
+    setTimeout(() => {
+      const toast = document.createElement('div');
+      toast.innerHTML = '🛡️ Admin Mode Activated';
+      toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#25D366;color:white;padding:12px 24px;border-radius:30px;font-weight:bold;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:all 0.3s ease;';
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; toast.style.top = '0'; }, 2500);
+      setTimeout(() => toast.remove(), 3000);
+    }, 100);
+
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  } else if (urlParams.get('admin') === 'false' || urlParams.get('admin') === '0') {
+    localStorage.removeItem('vera_admin_mode');
+    
+    // Non-blocking toast for exit
+    setTimeout(() => {
+      const toast = document.createElement('div');
+      toast.innerHTML = '👋 Admin Mode Disabled';
+      toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#e74c3c;color:white;padding:12px 24px;border-radius:30px;font-weight:bold;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:all 0.3s ease;';
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; toast.style.top = '0'; }, 2500);
+      setTimeout(() => toast.remove(), 3000);
+    }, 100);
+
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+  
+  // 2. Parse Custom Checkout Link (if any)
+  const customCartParam = urlParams.get('c');
+  if (customCartParam) {
+    try {
+      const decoded = JSON.parse(decodeURIComponent(atob(customCartParam)));
+      const fullCart = decoded.map(item => ({
+        productKey: item.pk,
+        size: item.s,
+        price: item.p,
+        name: item.n,
+        image: item.i,
+        qty: item.q
+      }));
+      saveCart(fullCart);
+      
+      // Clean URL so refreshing doesn't duplicate things
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // Open the cart drawer immediately
+      setTimeout(() => {
+        openCartDrawer();
+        showCheckoutScreen();
+      }, 500);
+    } catch (e) {
+      console.error('Failed to parse custom cart link:', e);
+    }
+  }
+
   const market = getMarket();
   const lang = getLang();
 
@@ -906,7 +982,36 @@ function handleCheckoutSubmit(event) {
 
   const name = document.getElementById('checkout-name').value;
   const phone = document.getElementById('checkout-phone').value;
-  const address = document.getElementById('checkout-address').value;
+  const gov = document.getElementById('checkout-gov').value;
+  const city = document.getElementById('checkout-city').value;
+  const streetAddress = document.getElementById('checkout-address').value;
+  const building = document.getElementById('checkout-building').value;
+  const floor = document.getElementById('checkout-floor').value;
+  const apartment = document.getElementById('checkout-apartment').value;
+  const altPhone = document.getElementById('checkout-alt-phone').value;
+  const landmark = document.getElementById('checkout-landmark').value;
+  const userNotes = document.getElementById('checkout-notes').value.trim();
+  
+  // Save to localStorage for auto-fill next time
+  localStorage.setItem('vera_customer_name', name);
+  localStorage.setItem('vera_customer_phone', phone);
+  localStorage.setItem('vera_customer_gov', gov);
+  localStorage.setItem('vera_customer_city', city);
+  localStorage.setItem('vera_customer_address', streetAddress);
+  localStorage.setItem('vera_customer_building', building);
+  localStorage.setItem('vera_customer_floor', floor);
+  localStorage.setItem('vera_customer_apartment', apartment);
+  localStorage.setItem('vera_customer_alt_phone', altPhone);
+  localStorage.setItem('vera_customer_landmark', landmark);
+  localStorage.setItem('vera_customer_notes', userNotes);
+  
+  let addressDetailsAr = streetAddress;
+  let addressDetailsEn = streetAddress;
+  if (building) { addressDetailsAr += ` - مبنى ${building}`; addressDetailsEn += `, Bldg ${building}`; }
+  if (floor) { addressDetailsAr += ` - دور ${floor}`; addressDetailsEn += `, Floor ${floor}`; }
+  if (apartment) { addressDetailsAr += ` - شقة ${apartment}`; addressDetailsEn += `, Apt ${apartment}`; }
+  
+  const fullAddress = `${gov} - ${city} - ${addressDetailsAr}`;
 
   const cartData = getCart();
   const total = getCartTotal();
@@ -961,7 +1066,9 @@ function handleCheckoutSubmit(event) {
     msg += `---------------------------\n`;
     msg += `الاسم: ${name}\n`;
     msg += `الهاتف: ${phone}\n`;
-    msg += `العنوان: ${address}\n`;
+    msg += `المحافظة: ${gov}\n`;
+    msg += `المدينة: ${city}\n`;
+    msg += `العنوان: ${addressDetailsAr}\n`;
     msg += `---------------------------\n`;
     msg += `المنتجات المطلوبة:\n`;
     cartData.forEach(item => {
@@ -988,7 +1095,9 @@ function handleCheckoutSubmit(event) {
     msg += `---------------------------\n`;
     msg += `Name: ${name}\n`;
     msg += `Phone: ${phone}\n`;
-    msg += `Address: ${address}\n`;
+    msg += `Gov: ${gov}\n`;
+    msg += `City: ${city}\n`;
+    msg += `Address: ${addressDetailsEn}\n`;
     msg += `---------------------------\n`;
     msg += `Requested Products:\n`;
     cartData.forEach(item => {
@@ -1039,6 +1148,46 @@ function handleCheckoutSubmit(event) {
   const statusMsg = document.getElementById('discount-status-msg');
   if (statusMsg) statusMsg.textContent = '';
 
+  // Calculate items sum
+  const totalItems = cartData.reduce((sum, item) => sum + item.qty, 0);
+  const productsText = cartData.map(item => `${item.name} (${item.size || ''}) x${item.qty}`).join(', ');
+
+  // Webhook payload for Turbo Google Sheet
+  const payload = {
+    sub_sender: "Vera",
+    follow_up_number: "01288649908",
+    shipment_type: "Pet Products",
+    recipient_name: name,
+    recipient_number: phone,
+    governorate: gov,
+    city: city,
+    address: addressDetailsAr,
+    building: building,
+    floor: floor,
+    apartment: apartment,
+    alt_phone: altPhone,
+    landmark: landmark,
+    notes: userNotes ? `يرجى الاتصال قبل التسليم - ${userNotes}` : "يرجى الاتصال قبل التسليم",
+    shipment_contents: productsText,
+    items_count: totalItems,
+    amount_to_collect: finalTotal,
+    country: "مصر"
+  };
+
+  // The Google Apps Script Webhook URL
+  const webhookUrl = 'https://script.google.com/macros/s/AKfycbx_0HTn-EMRPNN7CPruR_aATvaX7R2k9zlzODJlR0eOG48rSl_EWezvcGRqNWl5kPL1/exec';
+
+  if (webhookUrl) {
+    fetch(webhookUrl, {
+      method: 'POST',
+      mode: 'no-cors', // no-cors so we don't block the user if it fails
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    }).catch(e => console.error('Webhook error:', e));
+  }
+
   window.open(waUrl, '_blank');
 }
 
@@ -1075,13 +1224,13 @@ function updateCartUI() {
       discountAmount = Math.round(total * (activeDiscountPct / 100));
     }
     finalTotal = total - discountAmount + shipping;
-    
+
     let html = '';
     if (activeDiscountPct > 0 && total > 0) {
       html += `<span style="text-decoration: line-through; font-size: 0.8em; opacity: 0.7; margin-right: 5px;">${total}</span> `;
     }
     html += isAr ? `${finalTotal} ${currency}` : `${currency} ${finalTotal}`;
-    
+
     if (shipping > 0) {
       html += `<div style="font-size: 0.75em; opacity: 0.8; margin-top: 4px; font-weight: normal;">${isAr ? '(شامل 80 جنيه مصاريف شحن)' : '(Includes 80 EGP shipping)'}</div>`;
     }
@@ -1096,10 +1245,21 @@ function updateCartUI() {
     list.innerHTML = `<div class="cart-empty-msg">${isAr ? 'سلة المشتريات فارغة' : 'Your cart is empty'}</div>`;
     const actionBtn = document.getElementById('cart-action-btn');
     if (actionBtn) actionBtn.style.display = 'none';
+    const adminBtn = document.getElementById('admin-generate-link-btn');
+    if (adminBtn) adminBtn.style.display = 'none';
     showItemsScreen();
   } else {
     const actionBtn = document.getElementById('cart-action-btn');
     if (actionBtn) actionBtn.style.display = 'flex';
+    const adminBtn = document.getElementById('admin-generate-link-btn');
+    const adminExitBtn = document.getElementById('admin-exit-wrapper');
+    if (localStorage.getItem('vera_admin_mode') === '1') {
+      if (adminBtn) adminBtn.style.display = 'flex';
+      if (adminExitBtn) adminExitBtn.style.display = 'block';
+    } else {
+      if (adminBtn) adminBtn.style.display = 'none';
+      if (adminExitBtn) adminExitBtn.style.display = 'none';
+    }
 
     list.innerHTML = cartData.map(item => `
       <div class="cart-item">
@@ -1182,15 +1342,49 @@ function injectCartUI() {
           </div>
           <div class="checkout-field">
             <label for="checkout-name">${isAr ? 'الاسم بالكامل' : 'Full Name'}</label>
-            <input type="text" id="checkout-name" class="checkout-input" required placeholder="${isAr ? 'ادخل اسمك بالكامل' : 'Enter your full name'}">
+            <input type="text" id="checkout-name" class="checkout-input" required placeholder="${isAr ? 'ادخل اسمك بالكامل' : 'Enter your full name'}" value="${localStorage.getItem('vera_customer_name') || ''}">
           </div>
           <div class="checkout-field">
             <label for="checkout-phone">${isAr ? 'رقم الهاتف (يفضل واتساب)' : 'Phone Number (WhatsApp preferred)'}</label>
-            <input type="tel" id="checkout-phone" class="checkout-input" required placeholder="${isAr ? 'مثال: 01557748361' : 'e.g. 01012345678'}">
+            <input type="tel" id="checkout-phone" class="checkout-input" required placeholder="${isAr ? 'مثال: 01012345678' : 'e.g. 01012345678'}" value="${localStorage.getItem('vera_customer_phone') || ''}">
           </div>
           <div class="checkout-field">
-            <label for="checkout-address">${isAr ? 'المحافظة والعنوان بالتفصيل' : 'Governorate & Full Address'}</label>
-            <input type="text" id="checkout-address" class="checkout-input" required placeholder="${isAr ? 'المدينة، اسم الشارع، رقم الشقة' : 'City, street, building number'}">
+            <label id="checkout-gov-label">${isAr ? 'المحافظة' : 'Governorate'}</label>
+            <div id="checkout-gov-wrapper" class="custom-select-container"></div>
+            <input type="hidden" id="checkout-gov" required>
+          </div>
+          <div class="checkout-field">
+            <label id="checkout-city-label">${isAr ? 'المدينة' : 'City'}</label>
+            <div id="checkout-city-wrapper" class="custom-select-container"></div>
+            <input type="hidden" id="checkout-city" required>
+          </div>
+          <div class="checkout-field">
+            <label for="checkout-address">${isAr ? 'العنوان' : 'Address'}</label>
+            <input type="text" id="checkout-address" class="checkout-input" required placeholder="${isAr ? 'اسم الشارع' : 'Street name'}" value="${localStorage.getItem('vera_customer_address') || ''}">
+          </div>
+          <div class="checkout-field">
+            <label for="checkout-building">${isAr ? 'رقم المبنى' : 'Building No'} <span style="font-size:0.75em;opacity:0.6">(${isAr ? 'اختياري' : 'optional'})</span></label>
+            <input type="text" id="checkout-building" class="checkout-input" placeholder="${isAr ? 'مثال: 5' : 'e.g. 5'}" value="${localStorage.getItem('vera_customer_building') || ''}">
+          </div>
+          <div class="checkout-field">
+            <label for="checkout-floor">${isAr ? 'الدور' : 'Floor'} <span style="font-size:0.75em;opacity:0.6">(${isAr ? 'اختياري' : 'optional'})</span></label>
+            <input type="text" id="checkout-floor" class="checkout-input" placeholder="${isAr ? 'مثال: 3' : 'e.g. 3'}" value="${localStorage.getItem('vera_customer_floor') || ''}">
+          </div>
+          <div class="checkout-field">
+            <label for="checkout-apartment">${isAr ? 'الشقة' : 'Apartment'} <span style="font-size:0.75em;opacity:0.6">(${isAr ? 'اختياري' : 'optional'})</span></label>
+            <input type="text" id="checkout-apartment" class="checkout-input" placeholder="${isAr ? 'مثال: 12' : 'e.g. 12'}" value="${localStorage.getItem('vera_customer_apartment') || ''}">
+          </div>
+          <div class="checkout-field">
+            <label for="checkout-alt-phone">${isAr ? 'رقم هاتف إضافي' : 'Alternative Phone'} <span style="font-size:0.75em;opacity:0.6">(${isAr ? 'اختياري' : 'optional'})</span></label>
+            <input type="tel" id="checkout-alt-phone" class="checkout-input" placeholder="${isAr ? 'رقم احتياطي للتواصل' : 'Backup number'}" value="${localStorage.getItem('vera_customer_alt_phone') || ''}">
+          </div>
+          <div class="checkout-field">
+            <label for="checkout-landmark">${isAr ? 'علامة مميزة' : 'Landmark'} <span style="font-size:0.75em;opacity:0.6">(${isAr ? 'اختياري' : 'optional'})</span></label>
+            <input type="text" id="checkout-landmark" class="checkout-input" placeholder="" value="${localStorage.getItem('vera_customer_landmark') || ''}">
+          </div>
+          <div class="checkout-field">
+            <label for="checkout-notes">${isAr ? 'ملاحظات التوصيل' : 'Delivery Notes'} <span style="font-size:0.75em;opacity:0.6">(${isAr ? 'اختياري' : 'optional'})</span></label>
+            <textarea id="checkout-notes" class="checkout-input" rows="2" placeholder="${isAr ? 'أي ملاحظات إضافية للمندوب...' : 'Any extra notes for the courier...'}">${localStorage.getItem('vera_customer_notes') || ''}</textarea>
           </div>
         </form>
       </div>
@@ -1205,6 +1399,12 @@ function injectCartUI() {
         <span>${isAr ? 'إتمام الطلب' : 'Proceed to Checkout'}</span>
         <i class="fa-solid fa-arrow-right-to-bracket"></i>
       </button>
+      <button class="cart-btn-primary" id="admin-generate-link-btn" style="display: none; background: #25D366; color: white; margin-top: 10px; border: none;">
+        <span><i class="fa-solid fa-link"></i> ${isAr ? 'نسخ رابط الدفع المباشر' : 'Copy Direct Link'}</span>
+      </button>
+      <div id="admin-exit-wrapper" style="display: none; text-align: center; margin-top: 10px;">
+        <a href="#" id="admin-exit-btn" style="color: #888; font-size: 0.85em; text-decoration: underline;">${isAr ? 'إلغاء وضع الأدمن' : 'Exit Admin Mode'}</a>
+      </div>
     </div>
   `;
   document.body.appendChild(drawer);
@@ -1221,7 +1421,204 @@ function injectCartUI() {
   document.getElementById('checkout-form').addEventListener('submit', handleCheckoutSubmit);
   document.getElementById('apply-discount-btn').addEventListener('click', handleApplyDiscount);
 
+  // Admin Link Generator Event Listener
+  const adminBtn = document.getElementById('admin-generate-link-btn');
+  if (adminBtn) {
+    adminBtn.addEventListener('click', () => {
+      const cartData = getCart();
+      if (cartData.length === 0) return alert(isAr ? 'السلة فارغة!' : 'Cart is empty!');
+      const simpleCart = cartData.map(item => ({
+        pk: item.productKey, s: item.size, p: item.price, n: item.name, i: item.image, q: item.qty
+      }));
+      const b64 = btoa(encodeURIComponent(JSON.stringify(simpleCart)));
+      const url = window.location.origin + window.location.pathname + '?c=' + b64;
+      
+      navigator.clipboard.writeText(url).then(() => {
+        const originalText = adminBtn.innerHTML;
+        adminBtn.innerHTML = '<span><i class="fa-solid fa-check"></i> ' + (isAr ? 'تم النسخ بنجاح!' : 'Copied successfully!') + '</span>';
+        setTimeout(() => { adminBtn.innerHTML = originalText; }, 2000);
+      });
+    });
+  }
+
+  // Admin Exit Event Listener
+  const adminExit = document.getElementById('admin-exit-btn');
+  if (adminExit) {
+    adminExit.addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('vera_admin_mode');
+      updateCartUI(); // This will instantly hide the admin buttons
+    });
+  }
+
+  // Load Regions JSON and populate dropdowns
+  loadRegionsForCheckout();
+
   updateCartUI();
+}
+
+let loadedRegions = null;
+
+function createCustomSelect(containerId, inputId, options, placeholder, onChangeCallback, defaultValue = '') {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+
+  const hiddenInput = document.getElementById(inputId);
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'checkout-input custom-select-input';
+  input.placeholder = placeholder;
+  
+  if (defaultValue && options.includes(defaultValue)) {
+    input.value = defaultValue;
+    hiddenInput.value = defaultValue;
+  }
+
+  const arrow = document.createElement('i');
+  arrow.className = 'fa-solid fa-chevron-down custom-select-arrow';
+
+  const list = document.createElement('ul');
+  list.className = 'custom-select-list';
+
+  function normalizeArabic(text) {
+    return text.replace(/[أإآ]/g, 'ا')
+      .replace(/ة/g, 'ه')
+      .replace(/ى/g, 'ي');
+  }
+
+  function renderList(filterText = '') {
+    list.innerHTML = '';
+    const normalizedFilter = normalizeArabic(filterText.toLowerCase());
+
+    const filtered = options.filter(opt =>
+      normalizeArabic(opt.toLowerCase()).includes(normalizedFilter)
+    );
+
+    if (filtered.length === 0) {
+      const empty = document.createElement('li');
+      empty.className = 'custom-select-empty';
+      empty.textContent = getLang() === 'ar' ? 'لا توجد نتائج' : 'No results found';
+      list.appendChild(empty);
+    } else {
+      filtered.forEach(opt => {
+        const li = document.createElement('li');
+        li.textContent = opt;
+        li.addEventListener('click', (e) => {
+          e.stopPropagation();
+          input.value = opt;
+          hiddenInput.value = opt;
+          list.classList.remove('active');
+          if (onChangeCallback) onChangeCallback(opt);
+        });
+        list.appendChild(li);
+      });
+    }
+  }
+
+  input.addEventListener('focus', () => {
+    list.classList.add('active');
+    renderList('');
+  });
+
+  input.addEventListener('input', (e) => {
+    list.classList.add('active');
+    renderList(e.target.value);
+    hiddenInput.value = ''; // invalidate if they type without selecting
+  });
+
+  const documentClickHandler = (e) => {
+    // If the input was replaced/removed from DOM, remove this listener
+    if (!document.body.contains(container) || !container.contains(input)) {
+      document.removeEventListener('click', documentClickHandler);
+      return;
+    }
+    
+    if (!container.contains(e.target)) {
+      list.classList.remove('active');
+      // If they click out and it doesn't match an exact option, clear it
+      if (!options.includes(input.value)) {
+        input.value = '';
+        hiddenInput.value = '';
+      } else {
+        hiddenInput.value = input.value; // Valid text typed manually
+      }
+    }
+  };
+  document.addEventListener('click', documentClickHandler);
+
+  container.appendChild(input);
+  container.appendChild(arrow);
+  container.appendChild(list);
+
+  renderList('');
+  
+  if (defaultValue && options.includes(defaultValue) && onChangeCallback) {
+    // Timeout ensures it runs after current call stack, avoiding layout jump glitches
+    setTimeout(() => onChangeCallback(defaultValue), 10);
+  }
+
+  // Return a way to disable/enable it
+  return {
+    setDisabled: (disabled, newPlaceholder = null) => {
+      input.disabled = disabled;
+      if (newPlaceholder) input.placeholder = newPlaceholder;
+      if (disabled) {
+        input.value = '';
+        hiddenInput.value = '';
+        container.style.opacity = '0.6';
+      } else {
+        container.style.opacity = '1';
+      }
+    }
+  };
+}
+
+function loadRegionsForCheckout() {
+  const isAr = getLang() === 'ar';
+
+  // Initialize empty state
+  const savedGov = localStorage.getItem('vera_customer_gov') || '';
+  const savedCity = localStorage.getItem('vera_customer_city') || '';
+  
+  let citySelectController = createCustomSelect(
+    'checkout-city-wrapper',
+    'checkout-city',
+    [],
+    isAr ? 'اختر المحافظة أولاً' : 'Select Governorate first',
+    null
+  );
+  if (citySelectController) citySelectController.setDisabled(true);
+
+  fetch('/assets/regions.json')
+    .then(res => res.json())
+    .then(data => {
+      loadedRegions = data;
+      const govOptions = Object.keys(data);
+
+      createCustomSelect(
+        'checkout-gov-wrapper',
+        'checkout-gov',
+        govOptions,
+        isAr ? 'اختر المحافظة' : 'Select Governorate',
+        (selectedGov) => {
+          // When governorate changes, setup city dropdown
+          const cities = data[selectedGov] || [];
+          citySelectController = createCustomSelect(
+            'checkout-city-wrapper',
+            'checkout-city',
+            cities,
+            isAr ? 'اختر المدينة' : 'Select City',
+            null,
+            savedCity // Pass saved city if it exists
+          );
+          if (citySelectController) citySelectController.setDisabled(false);
+        },
+        savedGov // Pass saved gov if it exists
+      );
+    })
+    .catch(err => console.error("Could not load regions.json", err));
 }
 
 function handleApplyDiscount() {
