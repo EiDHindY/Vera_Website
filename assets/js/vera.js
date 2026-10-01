@@ -180,6 +180,36 @@ function getMarket() {
   return localStorage.getItem(STORAGE_MARKET) || 'egypt';
 }
 
+/*  Toast Notification Helper
+    ===================================================== */
+function showVeraToast(message, type = 'error') {
+  const isAr = document.documentElement.lang === 'ar';
+  const bg = type === 'error' ? '#e74c3c' : (type === 'success' ? '#25D366' : '#c5a880');
+  
+  const toast = document.createElement('div');
+  toast.innerHTML = message;
+  toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: ${bg};
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: bold;
+    z-index: 99999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    font-family: inherit;
+    text-align: center;
+    direction: ${isAr ? 'rtl' : 'ltr'};
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.top = '-20px'; }, 2500);
+  setTimeout(() => toast.remove(), 3000);
+}
+
 function getLang() {
   const htmlLang = document.documentElement.lang;
   if (htmlLang === 'en' || htmlLang === 'ar') {
@@ -969,6 +999,20 @@ function handleCartActionClick() {
   const checkoutScreen = document.getElementById('cart-screen-checkout');
   if (checkoutScreen.classList.contains('active')) {
     const form = document.getElementById('checkout-form');
+    const isAr = getLang() === 'ar';
+    
+    // Custom validation for custom dropdowns (hidden inputs)
+    const gov = document.getElementById('checkout-gov').value;
+    if (!gov) {
+      showVeraToast(isAr ? '⚠️ يرجى اختيار المحافظة' : '⚠️ Please select a Governorate', 'error');
+      return;
+    }
+    const city = document.getElementById('checkout-city').value;
+    if (!city) {
+      showVeraToast(isAr ? '⚠️ يرجى اختيار المدينة' : '⚠️ Please select a City', 'error');
+      return;
+    }
+
     if (form.reportValidity()) {
       form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
     }
@@ -1351,12 +1395,12 @@ function injectCartUI() {
           <div class="checkout-field">
             <label id="checkout-gov-label">${isAr ? 'المحافظة' : 'Governorate'}</label>
             <div id="checkout-gov-wrapper" class="custom-select-container"></div>
-            <input type="hidden" id="checkout-gov" required>
+            <input type="hidden" id="checkout-gov">
           </div>
           <div class="checkout-field">
             <label id="checkout-city-label">${isAr ? 'المدينة' : 'City'}</label>
             <div id="checkout-city-wrapper" class="custom-select-container"></div>
-            <input type="hidden" id="checkout-city" required>
+            <input type="hidden" id="checkout-city">
           </div>
           <div class="checkout-field">
             <label for="checkout-address">${isAr ? 'العنوان' : 'Address'}</label>
@@ -1426,7 +1470,10 @@ function injectCartUI() {
   if (adminBtn) {
     adminBtn.addEventListener('click', () => {
       const cartData = getCart();
-      if (cartData.length === 0) return alert(isAr ? 'السلة فارغة!' : 'Cart is empty!');
+      if (cartData.length === 0) {
+        showVeraToast(isAr ? '⚠️ السلة فارغة!' : '⚠️ Cart is empty!', 'error');
+        return;
+      }
       const simpleCart = cartData.map(item => ({
         pk: item.productKey, s: item.size, p: item.price, n: item.name, i: item.image, q: item.qty
       }));
