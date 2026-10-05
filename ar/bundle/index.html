@@ -131,9 +131,9 @@
 
       <!-- MAIN CTA -->
       <a href="#" class="btn btn-wa" data-wa-product="bundle"
-         onclick="trackWAClick('bundle',getMarket()); this.href=buildWhatsAppLink('bundle',getMarket(),'ar'); return true;" target="_blank" rel="noopener"
+         onclick="event.preventDefault(); addToCart('bundle', 'bundle', VERA_CONFIG.products.bundle.prices[getMarket()], 'باقة الحماية الكاملة', '../assets/spray_mockup_luxury.png'); showCheckoutScreen();"
          style="font-size:1.1rem; padding: 18px 48px; display:inline-flex; margin: 32px auto 0;">
-        <i class="fa-brands fa-whatsapp"></i> اطلب الباقة الكاملة الآن
+        <i class="fa-solid fa-cart-plus"></i> اطلب الباقة الكاملة الآن
       </a>
     </div>
   </section>
@@ -253,9 +253,9 @@
         <span class="payment-badge">بطاقة</span>
       </div>
       <a href="#" class="btn btn-wa" data-wa-product="bundle"
-         onclick="trackWAClick('bundle',getMarket()); this.href=buildWhatsAppLink('bundle',getMarket(),'ar'); return true;" target="_blank" rel="noopener"
+         onclick="event.preventDefault(); addToCart('bundle', 'bundle', VERA_CONFIG.products.bundle.prices[getMarket()], 'باقة الحماية الكاملة', '../assets/spray_mockup_luxury.png'); showCheckoutScreen();"
          style="font-size:1.1rem; padding: 18px 48px; display:inline-flex; margin: 0 auto;">
-        <i class="fa-brands fa-whatsapp"></i> اطلب الباقة الكاملة الآن
+        <i class="fa-solid fa-cart-plus"></i> اطلب الباقة الكاملة الآن
       </a>
       <p class="delivery-info" data-delivery style="justify-content:center; text-align:center; margin-top:16px;">التوصيل: جميع محافظات مصر</p>
     </div>

@@ -109,9 +109,9 @@
       </div>
 
       <a href="#" class="btn btn-wa" data-wa-product="bundle"
-         onclick="trackWAClick('bundle',getMarket()); this.href=buildWhatsAppLink('bundle',getMarket(),'en'); return true;" target="_blank" rel="noopener"
+         onclick="event.preventDefault(); addToCart('bundle', 'bundle', VERA_CONFIG.products.bundle.prices[getMarket()], 'Complete Protection Bundle', '../assets/spray_mockup_luxury.png'); showCheckoutScreen();"
          style="font-size:1.1rem; padding: 18px 48px; display:inline-flex; margin: 32px auto 0;">
-        <i class="fa-brands fa-whatsapp"></i> Order the Bundle via WhatsApp
+        <i class="fa-solid fa-cart-plus"></i> Add Bundle to Cart
       </a>
     </div>
   </section>
@@ -209,9 +209,9 @@
         <span class="payment-badge">Card</span>
       </div>
       <a href="#" class="btn btn-wa" data-wa-product="bundle"
-         onclick="trackWAClick('bundle',getMarket()); this.href=buildWhatsAppLink('bundle',getMarket(),'en'); return true;" target="_blank" rel="noopener"
+         onclick="event.preventDefault(); addToCart('bundle', 'bundle', VERA_CONFIG.products.bundle.prices[getMarket()], 'Complete Protection Bundle', '../assets/spray_mockup_luxury.png'); showCheckoutScreen();"
          style="font-size:1.1rem; padding: 18px 48px; display:inline-flex; margin: 0 auto;">
-        <i class="fa-brands fa-whatsapp"></i> Order Bundle via WhatsApp
+        <i class="fa-solid fa-cart-plus"></i> Add Bundle to Cart
       </a>
       <p class="delivery-info" data-delivery style="justify-content:center; text-align:center; margin-top:16px;">Delivery: All over Egypt (nationwide)</p>
     </div>

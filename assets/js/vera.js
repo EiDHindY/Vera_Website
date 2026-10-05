@@ -1117,7 +1117,7 @@ function handleCheckoutSubmit(event) {
     msg += `المنتجات المطلوبة:\n`;
     cartData.forEach(item => {
       const sizeStr = (item.size && item.size !== 'bundle') ? ` (${item.size}مل)` : '';
-      const nameStr = item.productKey === 'bundle' ? 'باقة الحماية الكاملة (سبراي 120مل + شامبو 120مل + معطر 120مل)' : item.name;
+      const nameStr = item.productKey === 'bundle' ? 'باقة الحماية الكاملة (سبراي 125مل + شامبو 120مل + بودرة القراد 70جم)' : item.name;
       msg += `- ${nameStr}${sizeStr} × ${item.qty} (${item.price * item.qty} ${currency})\n`;
     });
     msg += `---------------------------\n`;
@@ -1146,7 +1146,7 @@ function handleCheckoutSubmit(event) {
     msg += `Requested Products:\n`;
     cartData.forEach(item => {
       const sizeStr = (item.size && item.size !== 'bundle') ? ` (${item.size}ml)` : '';
-      const nameStr = item.productKey === 'bundle' ? 'Complete Protection Bundle (120ml Spray + 120ml Shampoo + 120ml Deodorizing)' : item.name;
+      const nameStr = item.productKey === 'bundle' ? 'Complete Protection Bundle (125ml Spray + 120ml Shampoo + 70g Tick Powder)' : item.name;
       msg += `- ${nameStr}${sizeStr} x ${item.qty} (${item.price * item.qty} ${currency})\n`;
     });
     msg += `---------------------------\n`;
